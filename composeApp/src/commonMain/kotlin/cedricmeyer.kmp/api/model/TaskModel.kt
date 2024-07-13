@@ -1,4 +1,4 @@
-package cedricmeyer.kmp.data_remote.model
+package cedricmeyer.kmp.api.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

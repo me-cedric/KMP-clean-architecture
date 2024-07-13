@@ -1,8 +1,8 @@
 package cedricmeyer.kmp.di
 
 import cedricmeyer.kmp.sqldelight.SharedDatabase
-import cedricmeyer.kmp.data_remote.RemoteDataImp
-import cedricmeyer.kmp.data_remote.model.mapper.ApiTaskMapper
+import cedricmeyer.kmp.api.RemoteDataImp
+import cedricmeyer.kmp.api.model.mapper.ApiTaskMapper
 import cedricmeyer.kmp.domain.IRepository
 import cedricmeyer.kmp.domain.interactors.GetTasksUseCase
 import io.ktor.client.HttpClient
@@ -90,7 +90,7 @@ val ktorModule = module {
         }
     }
 
-    single { "https://apex.oracle.com/pls/apex/internship_space" }
+    single { "http://192.168.1.80:3000" }
 }
 val sqlDelightModule = module {
     single { SharedDatabase(get()) }

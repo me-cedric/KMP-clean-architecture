@@ -1,6 +1,6 @@
-package cedricmeyer.kmp.data_remote.model.mapper
+package cedricmeyer.kmp.api.model.mapper
 
-import cedricmeyer.kmp.data_remote.model.Item
+import cedricmeyer.kmp.api.model.Item
 import cedricmeyer.kmp.domain.models.Task
 import cedricmeyer.kmp.domain.models.Complexity
 import cedricmeyer.kmp.domain.models.Status

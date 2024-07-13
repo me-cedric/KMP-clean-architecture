@@ -4,6 +4,7 @@ import cedricmeyer.kmp.domain.interactors.GetTasksUseCase
 import cedricmeyer.kmp.presentation.model.ResourceUIState
 import cedricmeyer.kmp.presentation.intent.BaseViewModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 
 class TasksViewModel(
@@ -38,6 +39,7 @@ class TasksViewModel(
         screenModelScope.launch {
             getTasksUseCase(Unit)
                 .onSuccess {
+                    Napier.d("Loaded Tasks", null, "getTasksUseCase")
                     setState {
                         copy(
                             tasks = if (it.isEmpty())
@@ -47,7 +49,10 @@ class TasksViewModel(
                         )
                     }
                 }
-                .onFailure { setState { copy(tasks = ResourceUIState.Error()) } }
+                .onFailure {
+                    Napier.e("Failed to load tasks", it, "getTasksUseCase")
+                    setState { copy(tasks = ResourceUIState.Error()) }
+                }
         }
     }
 }

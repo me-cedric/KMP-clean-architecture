@@ -1,9 +1,12 @@
-package cedricmeyer.kmp.data_remote
+package cedricmeyer.kmp.api
 
+import cedricmeyer.kmp.api.model.Item
+import cedricmeyer.kmp.api.model.TaskModel
+import cedricmeyer.kmp.api.model.mapper.ApiTaskMapper
+import cedricmeyer.kmp.api.model.toMyData
+import cedricmeyer.kmp.domain.models.Task
+import cedricmeyer.kmp.repository.IRemoteData
 import io.github.aakira.napier.Napier
-import cedricmeyer.kmp.data_remote.model.Item
-import cedricmeyer.kmp.data_remote.model.TaskModel
-import cedricmeyer.kmp.data_remote.model.mapper.ApiTaskMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -16,9 +19,6 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import cedricmeyer.kmp.domain.models.Task
-import cedricmeyer.kmp.data_remote.model.toMyData
-import cedricmeyer.kmp.repository.IRemoteData
 
 class RemoteDataImp(
     private val endPoint: String,
@@ -34,15 +34,16 @@ class RemoteDataImp(
         apiTaskMapper.map(
             httpClient.get("$endPoint/Task/ListerTasks/$id").body<Item>()
         )
+
     override suspend fun addTask(task: Task): Boolean {
         val test = apiTaskMapper.inverseMap(task)
-        Napier.d("$test", null    , "Task added successfully")
+        Napier.d("$test", null, "Task added successfully")
 
         // 1. Convert task to a JSON string
         val taskJson = Json.encodeToString(test.toMyData())
 
         // 2. Perform POST request using HttpClient
-        val response:HttpResponse  = httpClient.post("$endPoint/Task/Tasks")
+        val response: HttpResponse = httpClient.post("$endPoint/Task/Tasks")
         {
             contentType(ContentType.Application.Json)
             setBody(test.toMyData())
@@ -50,7 +51,7 @@ class RemoteDataImp(
 
         // 3. Check for successful response (2xx code)
         if (response.status.isSuccess()) {
-            Napier.v("HTTP Client", null    , "Task added successfully")
+            Napier.v("HTTP Client", null, "Task added successfully")
             return true // task added successfully
         } else {
             Napier.e("HTTP Client", null, "Failed to add task: ${response.request.content}")
